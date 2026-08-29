@@ -7,7 +7,7 @@ The widget:
 
 - shows a mouse icon and the current charge percentage;
 - displays the Bluetooth-assigned mouse name in its status text;
-- refreshes automatically every five minutes;
+- refreshes automatically every 10 seconds during the current testing phase;
 - hides itself when no compatible Bluetooth mouse battery is available;
 - adds `charging` to the status only while the device is charging;
 - follows the active Omarchy bar theme.
