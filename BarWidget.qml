@@ -9,7 +9,7 @@ WidgetButton {
   property var settings: ({})
 
   property int percentage: -1
-  readonly property string deviceName: "Magic Mouse"
+  property string deviceName: "Magic Mouse"
   property string chargeState: "unknown"
   readonly property string statusText: deviceName + ": " + percentage + "%" + (chargeState === "charging" ? " (charging)" : "")
 
@@ -19,13 +19,14 @@ WidgetButton {
 
   function updateFromOutput(output) {
     var lines = String(output).trim().split("\n")
-    if (lines.length < 2 || lines[0] === "") {
+    if (lines.length < 3 || lines[0] === "") {
       percentage = -1
       return
     }
 
-    percentage = parseInt(lines[0], 10)
-    chargeState = lines[1]
+    deviceName = lines[0]
+    percentage = parseInt(lines[1], 10)
+    chargeState = lines[2]
     if (isNaN(percentage)) percentage = -1
   }
 
@@ -42,7 +43,7 @@ WidgetButton {
 
   Process {
     id: batteryProcess
-    command: ["bash", "-c", "device=$(upower -e | grep 'battery_hid_.*_battery' | head -n1); [ -n \"$device\" ] || exit 1; info=$(upower -i \"$device\"); percent=$(printf '%s\\n' \"$info\" | sed -n 's/^[[:space:]]*percentage:[[:space:]]*\\([0-9]*\\)%.*/\\1/p' | head -n1); state=$(printf '%s\\n' \"$info\" | sed -n 's/^[[:space:]]*state:[[:space:]]*//p' | head -n1); [ -n \"$percent\" ] || exit 1; printf '%s\\n%s\\n' \"$percent\" \"${state:-unknown}\"" ]
+    command: ["bash", "-c", "for device in $(upower -e | grep 'battery_hid_.*_battery'); do info=$(upower -i \"$device\"); name=$(printf '%s\\n' \"$info\" | sed -n 's/^[[:space:]]*model:[[:space:]]*//p' | head -n1); printf '%s' \"$name\" | grep -qi 'magic mouse' || continue; percent=$(printf '%s\\n' \"$info\" | sed -n 's/^[[:space:]]*percentage:[[:space:]]*\\([0-9]*\\)%.*/\\1/p' | head -n1); state=$(printf '%s\\n' \"$info\" | sed -n 's/^[[:space:]]*state:[[:space:]]*//p' | head -n1); [ -n \"$percent\" ] || continue; printf '%s\\n%s\\n%s\\n' \"$name\" \"$percent\" \"${state:-unknown}\"; exit 0; done; exit 1" ]
     stdout: StdioCollector {
       waitForEnd: true
       onStreamFinished: root.updateFromOutput(text)

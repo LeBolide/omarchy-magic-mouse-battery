@@ -6,10 +6,15 @@ Apple Magic Mouse.
 The widget:
 
 - shows a mouse icon and the current charge percentage;
+- displays the Bluetooth-assigned mouse name in its status text;
 - refreshes automatically every 30 seconds;
 - hides itself when no compatible Bluetooth mouse battery is available;
 - adds `charging` to the status only while the device is charging;
 - follows the active Omarchy bar theme.
+
+The Linux Bluetooth stack and `hid-magicmouse` kernel driver operate the mouse.
+UPower is used only to read its battery level; the installer adds UPower when
+it is not already present.
 
 ## Requirements
 
@@ -20,23 +25,30 @@ The widget:
 ## Installation
 
 ```bash
-git clone https://github.com/<your-account>/omarchy-magic-mouse-battery.git \
+git clone https://github.com/LeBolide/omarchy-magic-mouse-battery.git \
   ~/.config/omarchy/plugins/magic-mouse-battery
-omarchy-shell shell rescanPlugins
-omarchy plugin enable magic-mouse-battery --after omarchy.bluetooth
+~/.config/omarchy/plugins/magic-mouse-battery/install.sh
 ```
 
-If the bar does not refresh immediately:
+The installer checks or installs UPower, validates the plugin, enables it next
+to Bluetooth, and refreshes the Omarchy shell. If the mouse is not paired yet,
+open the Bluetooth panel in the top bar and pair it; the widget will appear
+automatically once UPower reports its battery.
+
+The pairing step remains interactive because Bluetooth trust and pairing need
+explicit confirmation from the user.
+
+If the mouse works but no battery appears, check whether UPower sees it:
 
 ```bash
-omarchy restart shell
+upower -e | grep battery_hid
 ```
 
 ## Updating
 
 ```bash
 git -C ~/.config/omarchy/plugins/magic-mouse-battery pull
-omarchy restart shell
+~/.config/omarchy/plugins/magic-mouse-battery/install.sh
 ```
 
 ## License
