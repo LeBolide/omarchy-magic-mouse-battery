@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "magic-mouse-battery",
+  "name": "Magic Mouse Battery",
+  "version": "1.0.0",
+  "author": "Magic Mouse Battery contributors",
+  "description": "Shows the connected Apple Magic Mouse battery level",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "BarWidget.qml"
+  },
+  "barWidget": {
+    "displayName": "Magic Mouse Battery",
+    "description": "Mouse icon and charge percentage",
+    "category": "System",
+    "allowMultiple": false,
+    "defaultSection": "right"
+  }
+}
