@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "magic-mouse-battery",
+  "id": "io.github.lebolide.magic-mouse-battery",
   "name": "Magic Mouse Battery",
   "version": "1.0.0",
   "author": "LeBolide",

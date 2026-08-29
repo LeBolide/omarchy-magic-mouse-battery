@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-plugin_id="magic-mouse-battery"
+plugin_id="io.github.lebolide.magic-mouse-battery"
 script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 
 for command_name in omarchy omarchy-shell; do

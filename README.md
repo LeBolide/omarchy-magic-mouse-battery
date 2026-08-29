@@ -7,7 +7,7 @@ The widget:
 
 - shows a mouse icon and the current charge percentage;
 - displays the Bluetooth-assigned mouse name in its status text;
-- refreshes automatically every 30 seconds;
+- refreshes automatically every five minutes;
 - hides itself when no compatible Bluetooth mouse battery is available;
 - adds `charging` to the status only while the device is charging;
 - follows the active Omarchy bar theme.
@@ -26,8 +26,8 @@ it is not already present.
 
 ```bash
 git clone https://github.com/LeBolide/omarchy-magic-mouse-battery.git \
-  ~/.config/omarchy/plugins/magic-mouse-battery
-~/.config/omarchy/plugins/magic-mouse-battery/install.sh
+  ~/.config/omarchy/plugins/io.github.lebolide.magic-mouse-battery
+~/.config/omarchy/plugins/io.github.lebolide.magic-mouse-battery/install.sh
 ```
 
 The installer checks or installs UPower, validates the plugin, enables it next
@@ -47,8 +47,14 @@ upower -e | grep battery_hid
 ## Updating
 
 ```bash
-git -C ~/.config/omarchy/plugins/magic-mouse-battery pull
-~/.config/omarchy/plugins/magic-mouse-battery/install.sh
+git -C ~/.config/omarchy/plugins/io.github.lebolide.magic-mouse-battery pull
+~/.config/omarchy/plugins/io.github.lebolide.magic-mouse-battery/install.sh
+```
+
+## Removal
+
+```bash
+omarchy plugin remove io.github.lebolide.magic-mouse-battery --yes
 ```
 
 ## License

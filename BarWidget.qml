@@ -5,7 +5,7 @@ import qs.Ui
 
 WidgetButton {
   id: root
-  property string moduleName: "magic-mouse-battery"
+  property string moduleName: "io.github.lebolide.magic-mouse-battery"
   property var settings: ({})
 
   property int percentage: -1
@@ -54,7 +54,7 @@ WidgetButton {
   }
 
   Timer {
-    interval: 30000
+    interval: 300000
     running: true
     repeat: true
     triggeredOnStart: true
