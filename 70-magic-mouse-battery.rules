@@ -1,0 +1,4 @@
+# Permit the active desktop session to issue read-only HID reports to a
+# Bluetooth or USB Apple Magic Mouse 2. Other hidraw devices are unaffected.
+SUBSYSTEM=="hidraw", KERNELS=="0005:004C:0269.*", TAG+="uaccess"
+SUBSYSTEM=="hidraw", KERNELS=="0003:05AC:0269.*", TAG+="uaccess"

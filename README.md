@@ -13,14 +13,15 @@ The widget:
 - follows the active Omarchy bar theme.
 
 The Linux Bluetooth stack and `hid-magicmouse` kernel driver operate the mouse.
-UPower is used only to read its battery level; the installer adds UPower when
-it is not already present.
+Because some kernels expose an invalid `0%` Bluetooth battery through UPower,
+the plugin reads the mouse's standard HID battery report directly and uses the
+kernel power-supply value as a fallback.
 
 ## Requirements
 
 - Omarchy with the Quickshell-based status bar
-- `upower`
-- A paired Apple Magic Mouse that exposes its battery through UPower
+- Python 3
+- A paired Apple Magic Mouse 2
 
 ## Installation
 
@@ -30,18 +31,18 @@ git clone https://github.com/LeBolide/omarchy-magic-mouse-battery.git \
 ~/.config/omarchy/plugins/io.github.lebolide.magic-mouse-battery/install.sh
 ```
 
-The installer checks or installs UPower, validates the plugin, enables it next
-to Bluetooth, and refreshes the Omarchy shell. If the mouse is not paired yet,
-open the Bluetooth panel in the top bar and pair it; the widget will appear
-automatically once UPower reports its battery.
+The installer adds a narrowly scoped udev rule for Apple Magic Mouse 2 HID
+battery reads, validates the plugin, enables it next to Bluetooth, and refreshes
+the Omarchy shell. If the mouse is not paired yet, open the Bluetooth panel in
+the top bar and pair it.
 
 The pairing step remains interactive because Bluetooth trust and pairing need
 explicit confirmation from the user.
 
-If the mouse works but no battery appears, check whether UPower sees it:
+If the mouse works but no battery appears, test the bundled reader:
 
 ```bash
-upower -e | grep battery_hid
+~/.config/omarchy/plugins/io.github.lebolide.magic-mouse-battery/query-battery.py
 ```
 
 ## Updating
@@ -55,6 +56,9 @@ git -C ~/.config/omarchy/plugins/io.github.lebolide.magic-mouse-battery pull
 
 ```bash
 omarchy plugin remove io.github.lebolide.magic-mouse-battery --yes
+sudo rm /etc/udev/rules.d/70-magic-mouse-battery.rules
+sudo udevadm control --reload-rules
+sudo udevadm trigger --subsystem-match=hidraw
 ```
 
 ## License

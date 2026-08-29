@@ -11,6 +11,7 @@ WidgetButton {
   property int percentage: -1
   property string deviceName: "Magic Mouse"
   property string chargeState: "unknown"
+  readonly property string queryScript: String(Qt.resolvedUrl("query-battery.py")).replace("file://", "")
   readonly property string statusText: deviceName + ": " + percentage + "%" + (chargeState === "charging" ? " (charging)" : "")
 
   function refresh() {
@@ -43,7 +44,7 @@ WidgetButton {
 
   Process {
     id: batteryProcess
-    command: ["bash", "-c", "for device in $(upower -e | grep 'battery_hid_.*_battery'); do info=$(upower -i \"$device\"); name=$(printf '%s\\n' \"$info\" | sed -n 's/^[[:space:]]*model:[[:space:]]*//p' | head -n1); printf '%s' \"$name\" | grep -qi 'magic mouse' || continue; percent=$(printf '%s\\n' \"$info\" | sed -n 's/^[[:space:]]*percentage:[[:space:]]*\\([0-9]*\\)%.*/\\1/p' | head -n1); state=$(printf '%s\\n' \"$info\" | sed -n 's/^[[:space:]]*state:[[:space:]]*//p' | head -n1); [ -n \"$percent\" ] || continue; printf '%s\\n%s\\n%s\\n' \"$name\" \"$percent\" \"${state:-unknown}\"; exit 0; done; exit 1" ]
+    command: ["python3", root.queryScript]
     stdout: StdioCollector {
       waitForEnd: true
       onStreamFinished: root.updateFromOutput(text)
