@@ -5,7 +5,7 @@ set -euo pipefail
 plugin_id="io.github.lebolide.magic-mouse-battery"
 script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 
-for command_name in omarchy omarchy-shell; do
+for command_name in omarchy omarchy-shell python3 udevadm; do
   if ! command -v "$command_name" >/dev/null 2>&1; then
     echo "Error: $command_name is required. This plugin is designed for Omarchy." >&2
     exit 1
@@ -28,7 +28,6 @@ fi
 echo "Enabling Magic Mouse Battery in the top-right bar..."
 omarchy-shell shell rescanPlugins
 omarchy plugin enable "$plugin_id" --after omarchy.bluetooth
-omarchy restart shell
 
 if "$script_dir/query-battery.py" >/dev/null 2>&1; then
   echo "Installation complete. The Magic Mouse battery is readable."

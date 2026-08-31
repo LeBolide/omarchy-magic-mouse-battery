@@ -7,7 +7,7 @@ The widget:
 
 - shows a mouse icon and the current charge percentage;
 - displays the Bluetooth-assigned mouse name in its status text;
-- refreshes automatically every 10 seconds during the current testing phase;
+- reads immediately at startup and when a new HID device connects, then every 2 minutes;
 - hides itself when no compatible Bluetooth mouse battery is available;
 - adds `charging` to the status only while the device is charging;
 - follows the active Omarchy bar theme.
@@ -19,25 +19,33 @@ kernel power-supply value as a fallback.
 
 ## Requirements
 
-- Omarchy with the Quickshell-based status bar
-- Python 3
-- A paired Apple Magic Mouse 2
+- Omarchy with the Quickshell-based status bar and `hid-magicmouse` kernel driver
+- Python 3 and `udevadm` (both included with a standard Omarchy installation)
+- A paired Apple Magic Mouse 2, over Bluetooth or USB
+- Administrator access during setup to install one narrowly scoped udev rule
 
 ## Installation
 
 ```bash
-git clone https://github.com/LeBolide/omarchy-magic-mouse-battery.git \
-  ~/.config/omarchy/plugins/io.github.lebolide.magic-mouse-battery
+omarchy plugin add \
+  https://github.com/LeBolide/omarchy-magic-mouse-battery.git --yes
 ~/.config/omarchy/plugins/io.github.lebolide.magic-mouse-battery/install.sh
 ```
 
-The installer adds a narrowly scoped udev rule for Apple Magic Mouse 2 HID
-battery reads, validates the plugin, enables it next to Bluetooth, and refreshes
-the Omarchy shell. If the mouse is not paired yet, open the Bluetooth panel in
-the top bar and pair it.
+Review the repository before installation: Omarchy plugins run unsandboxed with
+your user permissions. The plugin is initially added disabled. Its installer
+validates the plugin, asks `sudo` to install the included udev rule, and then
+enables the widget next to Bluetooth.
 
-The pairing step remains interactive because Bluetooth trust and pairing need
-explicit confirmation from the user.
+The rule grants the active desktop session read-only HID-report access for the
+Apple Magic Mouse 2 product IDs only. It does not grant access to other HID
+devices. The widget keeps a passive `udevadm` listener for new HID devices so it
+can refresh when the mouse connects; otherwise it reads the battery every two
+minutes. No service, daemon, or network connection is installed.
+
+If the mouse is not paired yet, open the Bluetooth panel in the top bar and pair
+it. The pairing step remains interactive because Bluetooth trust and pairing
+need explicit confirmation from the user.
 
 If the mouse works but no battery appears, test the bundled reader:
 
@@ -48,18 +56,19 @@ If the mouse works but no battery appears, test the bundled reader:
 ## Updating
 
 ```bash
-git -C ~/.config/omarchy/plugins/io.github.lebolide.magic-mouse-battery pull
+omarchy plugin update io.github.lebolide.magic-mouse-battery
 ~/.config/omarchy/plugins/io.github.lebolide.magic-mouse-battery/install.sh
 ```
 
 ## Removal
 
 ```bash
-omarchy plugin remove io.github.lebolide.magic-mouse-battery --yes
-sudo rm /etc/udev/rules.d/70-magic-mouse-battery.rules
-sudo udevadm control --reload-rules
-sudo udevadm trigger --subsystem-match=hidraw
+~/.config/omarchy/plugins/io.github.lebolide.magic-mouse-battery/uninstall.sh
 ```
+
+The uninstaller removes only an installed udev rule that exactly matches the
+one shipped by this plugin, reloads udev, and then removes the plugin. It refuses
+to delete a modified rule.
 
 ## License
 

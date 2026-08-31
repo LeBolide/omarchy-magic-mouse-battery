@@ -13,6 +13,7 @@ WidgetButton {
   property string chargeState: "unknown"
   readonly property string queryScript: String(Qt.resolvedUrl("query-battery.py")).replace("file://", "")
   readonly property string statusText: deviceName + ": " + percentage + "%" + (chargeState === "charging" ? " (charging)" : "")
+  readonly property int refreshInterval: 120000
 
   function refresh() {
     if (!batteryProcess.running) batteryProcess.running = true
@@ -54,8 +55,25 @@ WidgetButton {
     }
   }
 
+  Process {
+    command: ["udevadm", "monitor", "--udev", "--subsystem-match=hidraw", "--property"]
+    running: true
+    stdout: SplitParser {
+      onRead: function(line) {
+        if (String(line).trim() === "ACTION=add") connectionRefreshTimer.restart()
+      }
+    }
+  }
+
   Timer {
-    interval: 10000
+    id: connectionRefreshTimer
+    interval: 1000
+    repeat: false
+    onTriggered: root.refresh()
+  }
+
+  Timer {
+    interval: root.refreshInterval
     running: true
     repeat: true
     triggeredOnStart: true

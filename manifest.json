@@ -4,6 +4,7 @@
   "name": "Magic Mouse Battery",
   "version": "1.0.0",
   "author": "LeBolide",
+  "license": "MIT",
   "description": "Shows the connected Apple Magic Mouse battery level",
   "kinds": [
     "bar-widget"
