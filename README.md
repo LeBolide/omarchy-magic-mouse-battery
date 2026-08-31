@@ -3,6 +3,8 @@
 A small Omarchy bar widget that displays the battery level of a connected
 Apple Magic Mouse.
 
+![Magic Mouse Battery widget in the Omarchy bar](preview.png)
+
 The widget:
 
 - shows a mouse icon and the current charge percentage;
