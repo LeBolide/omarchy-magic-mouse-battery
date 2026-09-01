@@ -3,7 +3,7 @@
 A small Omarchy bar widget that displays the battery level of a connected
 Apple Magic Mouse.
 
-![Magic Mouse Battery widget in the Omarchy bar](preview.png?raw=true&v=2)
+![Magic Mouse Battery widget in the Omarchy bar](https://raw.githubusercontent.com/LeBolide/omarchy-magic-mouse-battery/87cd36cdb6c93aebfd87ca8ddb4cb8a17aba747c/preview.png)
 
 The widget:
 
